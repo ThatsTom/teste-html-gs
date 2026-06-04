@@ -1,74 +1,99 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Consulta de CEP - ViaCEP</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
-</head>
-<body>
-  <main class="container">
-    <section class="card">
-      <h1>Consulta de CEP</h1>
-      <p class="subtitle">Digite um CEP para buscar o endereço usando a API do ViaCEP.</p>
+<html>
+    <head>
+    <title>ViaCEP Webservice</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-      <form id="cepForm" class="form">
-        <label for="cep">CEP</label>
-        <div class="input-group">
-          <input
-            type="text"
-            id="cep"
-            name="cep"
-            placeholder="Ex: 01001-000"
-            maxlength="9"
-            autocomplete="postal-code"
-          />
-          <button type="submit" id="buscarBtn">Buscar</button>
-        </div>
-        <small>Digite somente números ou use o formato 00000-000.</small>
+    <!-- Adicionando Javascript -->
+    <script>
+    
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+            document.getElementById('ibge').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            document.getElementById('ibge').value=(conteudo.ibge);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                document.getElementById('ibge').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+
+    </script>
+    </head>
+
+    <body>
+    <!-- Inicio do formulario -->
+      <form method="get" action=".">
+        <label>Cep:
+        <input name="cep" type="text" id="cep" value="" size="10" maxlength="9"
+               onblur="pesquisacep(this.value);" /></label><br />
+        <label>Rua:
+        <input name="rua" type="text" id="rua" size="60" /></label><br />
+        <label>Bairro:
+        <input name="bairro" type="text" id="bairro" size="40" /></label><br />
+        <label>Cidade:
+        <input name="cidade" type="text" id="cidade" size="40" /></label><br />
+        <label>Estado:
+        <input name="uf" type="text" id="uf" size="2" /></label><br />
+        <label>IBGE:
+        <input name="ibge" type="text" id="ibge" size="8" /></label><br />
       </form>
+    </body>
 
-      <p id="mensagem" class="mensagem"></p>
-
-      <section id="resultado" class="resultado hidden" aria-live="polite">
-        <h2>Endereço encontrado</h2>
-
-        <div class="grid">
-          <div>
-            <span>CEP</span>
-            <strong id="resCep">-</strong>
-          </div>
-
-          <div>
-            <span>Logradouro</span>
-            <strong id="resLogradouro">-</strong>
-          </div>
-
-          <div>
-            <span>Bairro</span>
-            <strong id="resBairro">-</strong>
-          </div>
-
-          <div>
-            <span>Cidade</span>
-            <strong id="resCidade">-</strong>
-          </div>
-
-          <div>
-            <span>Estado</span>
-            <strong id="resEstado">-</strong>
-          </div>
-
-          <div>
-            <span>DDD</span>
-            <strong id="resDdd">-</strong>
-          </div>
-        </div>
-
-        <button type="button" id="limparBtn" class="btn-secondary">Limpar</button>
-      </section>
-    </section>
-  </main>
-</body>
-</html>
+    </html>
