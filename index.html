@@ -3,47 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css">
-  <title>Site Simples</title>
-
+  <title>Consulta de CEP - ViaCEP</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>Meu Site Simples</h1>
-    <p>Um exemplo de página HTML com CSS no próprio index.</p>
-  </header>
-
-  <nav>
-    <a href="#">Início</a>
-    <a href="#">Sobre</a>
-    <a href="#">Serviços</a>
-    <a href="#">Contato</a>
-  </nav>
-
-  <main>
+  <main class="container">
     <section class="card">
-      <h2>Bem-vindo</h2>
-      <p>
-        Esta é uma página simples criada com HTML e CSS interno.
-        Você pode editar este arquivo para colocar seus textos, imagens e links.
-      </p>
-      <a href="#" class="botao">Saiba mais</a>
-    </section>
+      <h1>Consulta de CEP</h1>
+      <p class="subtitle">Digite um CEP para buscar o endereço usando a API do ViaCEP.</p>
 
-    <section class="card">
-      <h2>Sobre o projeto</h2>
-      <p>
-        O CSS está dentro da tag <code>&lt;style&gt;</code> no próprio arquivo
-        <strong>index.html</strong>, sem precisar de arquivos externos.
-      </p>
+      <form id="cepForm" class="form">
+        <label for="cep">CEP</label>
+        <div class="input-group">
+          <input
+            type="text"
+            id="cep"
+            name="cep"
+            placeholder="Ex: 01001-000"
+            maxlength="9"
+            autocomplete="postal-code"
+          />
+          <button type="submit" id="buscarBtn">Buscar</button>
+        </div>
+        <small>Digite somente números ou use o formato 00000-000.</small>
+      </form>
+
+      <p id="mensagem" class="mensagem"></p>
+
+      <section id="resultado" class="resultado hidden" aria-live="polite">
+        <h2>Endereço encontrado</h2>
+
+        <div class="grid">
+          <div>
+            <span>CEP</span>
+            <strong id="resCep">-</strong>
+          </div>
+
+          <div>
+            <span>Logradouro</span>
+            <strong id="resLogradouro">-</strong>
+          </div>
+
+          <div>
+            <span>Bairro</span>
+            <strong id="resBairro">-</strong>
+          </div>
+
+          <div>
+            <span>Cidade</span>
+            <strong id="resCidade">-</strong>
+          </div>
+
+          <div>
+            <span>Estado</span>
+            <strong id="resEstado">-</strong>
+          </div>
+
+          <div>
+            <span>DDD</span>
+            <strong id="resDdd">-</strong>
+          </div>
+        </div>
+
+        <button type="button" id="limparBtn" class="btn-secondary">Limpar</button>
+      </section>
     </section>
   </main>
-
-  <footer>
-    <p>&copy; adicionando um novo documento aqui sei la.</p>
-  </footer>
-
-  <script src="main.js"></script>
 </body>
-
 </html>
